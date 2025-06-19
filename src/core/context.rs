@@ -22,7 +22,7 @@ pub static DEFAULT_LOGS_FOLDER: &str = "logs";
 /// Application qualifier (used for config directory identification).
 pub const APP_QUALIFIER: &str = "io";
 /// Application organization identifier.
-pub const APP_ORG: &str = "github.benji377";
+pub const APP_ORG: &str = "github.tooka-org";
 /// Application name.
 pub const APP_NAME: &str = "tooka";
 
