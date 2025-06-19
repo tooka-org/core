@@ -1,10 +1,16 @@
 # 🧩 Tooka Core
 
-[![github]](https://github.com/Benji377/tooka)&ensp;[![crates-io]](https://crates.io/crates/tooka-core)&ensp;[![docs-rs]](https://docs.rs/tooka_core)
+[![github]](https://github.com/tooka-org/core)
+[![crates-io]](https://crates.io/crates/tooka-core)
+[![docs-rs]](https://docs.rs/tooka_core)
+[![clippy]](https://github.com/tooka-org/core/actions/workflows/clippy.yml)
+[![test]](https://github.com/tooka-org/core/actions/workflows/test.yml)
 
 [github]: https://img.shields.io/badge/github-8da0cb?style=for-the-badge&labelColor=555555&logo=github
 [crates-io]: https://img.shields.io/badge/crates.io-fc8d62?style=for-the-badge&labelColor=555555&logo=rust
 [docs-rs]: https://img.shields.io/badge/docs.rs-66c2a5?style=for-the-badge&labelColor=555555&logo=docs.rs
+[clippy]: https://img.shields.io/github/actions/workflow/status/Benji377/tooka/clippy.yml?label=Clippy&logo=rust&style=for-the-badge&labelColor=555555
+[test]: https://img.shields.io/github/actions/workflow/status/Benji377/tooka/test.yml?label=Tests&logo=githubactions&style=for-the-badge&labelColor=555555
 
 The internal engine powering Tooka — a rule-based automation framework for file handling.
 
