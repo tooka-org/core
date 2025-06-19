@@ -40,17 +40,6 @@ Designed for embedding in CLI tools or other Rust applications.
 
 ---
 
-## 🛠 Integration
-
-Add to your `Cargo.toml`:
-
-```toml
-[dependencies]
-tooka-core = "1.0.2"
-```
-
----
-
 ## ⚡ Performance Benchmarks
 
 Benchmarks using [Criterion.rs](https://github.com/bheisler/criterion.rs) are located in the `benches/` directory to track and optimize sorting and traversal performance.
@@ -59,4 +48,4 @@ Benchmarks using [Criterion.rs](https://github.com/bheisler/criterion.rs) are lo
 
 ## 📜 License
 
-Licensed under [GPLv3](../LICENSE)
+Licensed under [GPLv3](LICENSE)
