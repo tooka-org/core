@@ -282,4 +282,9 @@ impl Rule {
 
         Ok(())
     }
+
+    /// Returns the YAML schema used for rule validation.
+    pub fn schema() -> &'static str {
+        include_str!("../../schema/rule.yaml")
+    }
 }
