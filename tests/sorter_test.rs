@@ -8,8 +8,8 @@ mod tests {
     };
     use tempfile::tempdir;
     use tooka_core::{
-        report::generate_report,
         error::TookaError,
+        report::generate_report,
         rule::{Action, Conditions, DeleteAction, MoveAction, Range, Rule},
         rules_file::RulesFile,
         sorter::{MatchResult, sort_files},
@@ -305,11 +305,12 @@ mod tests {
                     is_symlink: None,
                     metadata: None,
                 },
-                then: vec![Action::Move(MoveAction {
-                    to: target.to_string_lossy().to_string(),
-                    preserve_structure: false,
-                }),
-                Action::Delete(DeleteAction { trash: false }),
+                then: vec![
+                    Action::Move(MoveAction {
+                        to: target.to_string_lossy().to_string(),
+                        preserve_structure: false,
+                    }),
+                    Action::Delete(DeleteAction { trash: false }),
                 ],
             });
         }

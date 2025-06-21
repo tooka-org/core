@@ -94,4 +94,7 @@ pub enum RuleValidationError {
 
     #[error("rule {0}: invalid conditions: {1}")]
     InvalidCondition(String, String),
+
+    #[error("invalid format: {0}")]
+    InvalidFormat(String),
 }

@@ -118,7 +118,7 @@ impl RulesFile {
     fn add_single_rule(&mut self, yaml: &str, overwrite: bool) -> Result<(), TookaError> {
         let rule: Rule = serde_yaml::from_str(yaml)?;
         log::debug!("Parsed new rule: {rule:?}");
-        rule.validate()?;
+        rule.validate(true)?;
 
         if let Some(pos) = self.rules.iter().position(|r| r.id == rule.id) {
             if overwrite {
@@ -144,7 +144,7 @@ impl RulesFile {
 
         for rule in parsed.rules {
             log::debug!("Parsed rule: {rule:?}");
-            rule.validate()?;
+            rule.validate(true)?;
 
             if let Some(pos) = self.rules.iter().position(|r| r.id == rule.id) {
                 if overwrite {

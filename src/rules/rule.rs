@@ -2,6 +2,8 @@
 //! Includes rule conditions, actions, and validation logic ensuring rule correctness.
 //! Supports complex matching criteria such as filename patterns, metadata, size, dates, etc.
 
+use std::{fs, path::Path};
+
 use crate::core::error::RuleValidationError;
 use serde::{Deserialize, Serialize};
 
@@ -158,32 +160,58 @@ pub struct ExecuteAction {
 ///
 /// Returns an error if validation fails.
 impl Rule {
-    /// Validates the rule to ensure it has all required fields and valid structure.
-    pub fn validate(&self) -> Result<(), RuleValidationError> {
+    /// Constructs rules from a YAML file.
+    /// Supports both single-rule files and multi-rule files (under `rules:` key).
+    pub fn new_from_file<P: AsRef<Path>>(path: P) -> Result<Vec<Self>, RuleValidationError> {
+        let content = fs::read_to_string(path).map_err(|e| {
+            RuleValidationError::InvalidFormat(format!("Failed to read file: {}", e))
+        })?;
+
+        if content.trim_start().starts_with("rules:") {
+            // Multiple rules
+            let parsed: Result<RulesWrapper, _> = serde_yaml::from_str(&content);
+            match parsed {
+                Ok(wrapper) => Ok(wrapper.rules),
+                Err(e) => Err(RuleValidationError::InvalidFormat(format!(
+                    "YAML parsing failed: {e}"
+                ))),
+            }
+        } else {
+            // Single rule
+            let rule: Result<Rule, _> = serde_yaml::from_str(&content);
+            match rule {
+                Ok(r) => Ok(vec![r]),
+                Err(e) => Err(RuleValidationError::InvalidFormat(format!(
+                    "YAML parsing failed: {e}"
+                ))),
+            }
+        }
+    }
+    /// Validates the rule, with an optional `deep` check for logic and content consistency.
+    ///
+    /// If `deep` is `false`, only structural deserialization is considered valid.
+    /// If `deep` is `true`, content checks like required fields, logic checks, and date format are applied.
+    pub fn validate(&self, deep: bool) -> Result<(), RuleValidationError> {
+        if !deep {
+            return Ok(()); // Structural deserialization has already passed
+        }
+
         if self.id.trim().is_empty() {
-            log::error!("Rule validation failed: missing id");
             return Err(RuleValidationError::MissingId);
         }
 
         if self.name.trim().is_empty() {
-            log::error!("Rule validation failed: missing name for rule {}", self.id);
             return Err(RuleValidationError::MissingName(self.id.clone()));
         }
 
         if self.then.is_empty() {
-            log::error!(
-                "Rule validation failed: no actions defined for rule {}",
-                self.id
-            );
             return Err(RuleValidationError::NoActions(self.id.clone()));
         }
 
-        // Check for duplicate metadata keys
         if let Some(metadata) = &self.when.metadata {
             let mut keys = std::collections::HashSet::new();
             for field in metadata {
                 if !keys.insert(&field.key) {
-                    log::error!("Rule {}: duplicate metadata key '{}'", self.id, field.key);
                     return Err(RuleValidationError::InvalidCondition(
                         self.id.clone(),
                         format!("Duplicate metadata key '{}'", field.key),
@@ -192,7 +220,6 @@ impl Rule {
             }
         }
 
-        // Check size range consistency
         if let Some(size) = &self.when.size_kb {
             if let (Some(min), Some(max)) = (size.min, size.max) {
                 if min > max {
@@ -204,7 +231,6 @@ impl Rule {
             }
         }
 
-        // Check created and modified date formats (optional)
         for (label, date_range) in [
             ("created_date", &self.when.created_date),
             ("modified_date", &self.when.modified_date),
@@ -282,9 +308,10 @@ impl Rule {
 
         Ok(())
     }
+}
 
-    /// Returns the YAML schema used for rule validation.
-    pub fn schema() -> &'static str {
-        include_str!("../../schema/rule.yaml")
-    }
+/// Wrapper for multi-rule YAML files
+#[derive(Debug, Serialize, Deserialize)]
+struct RulesWrapper {
+    pub rules: Vec<Rule>,
 }
