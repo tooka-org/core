@@ -1,6 +1,6 @@
 [package]
 name = "tooka-core"
-version = "1.0.3"
+version = "1.0.4"
 description = "The internal engine powering Tooka"
 authors = ["Benjamin Demetz"]
 license-file = "LICENSE"
