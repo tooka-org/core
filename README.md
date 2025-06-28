@@ -16,6 +16,9 @@ The internal engine powering Tooka — a rule-based automation framework for fil
 
 ---
 
+> [!CAUTION]
+> This has been merged into the main repository (tooka) and won't be updated
+
 ## 🧭 Overview
 
 `tooka-core` provides:
